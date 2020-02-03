@@ -9,7 +9,8 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route path="/List/:list_id" component={List} />
-          <Route path="/NewTasting" component={TastingReview} />
+          <Route path="/Tasting/:tasting_id" component={TastingReview} />
+          <Route path="/Tasting" component={TastingReview} />
           <Route path="/" exact component={Lists} />
         </Switch>
       </BrowserRouter>

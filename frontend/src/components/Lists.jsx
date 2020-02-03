@@ -43,7 +43,7 @@ class Lists extends React.Component {
 							})}
 						</ul>
 						<br /><br />
-						<Link to="/NewTasting">+ New Tasting</Link>
+						<Link to="/Tasting">+ New Tasting</Link>
 					</React.Fragment>
 				)}
 			</React.Fragment>

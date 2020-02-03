@@ -13,28 +13,81 @@ import {
 	InputGroup
 } from "react-bootstrap";
 import { Formik, useField } from "formik";
+import moment from "moment";
 
-const MyRadio = ({ children, ...props }) => {
-	const [field, meta] = useField({ ...props, type: 'radio'});
+const COLORS = {
+	"white": [
+		{
+			name: "Lemon",
+			value: 0
+		},
+		{
+			name: "Gold",
+			value: 1
+		},
+		{
+			name: "Amber",
+			value: 2
+		}
+	]
+
+};
+
+const colorField = (wine_type, change, values) => {
+
+	if (wine_type) {
+		return (
+			<Form.Group>
+				<Form.Label>Color ({wine_type})</Form.Label>
+				<Form.Control
+					as="select"
+					name="appearance_color"
+					onChange={change}
+					value={values.appearance_color}
+				>
+					<option value="" selected> - Select a Color - </option>
+				</Form.Control>
+			</Form.Group>
+		);
+	}
+
 	return (
-		<Form.Group>
-			<Form.Label>{children}</Form.Label>
-			<Form.Radio {...field} {...props}></Form.Radio>
-		</Form.Group>
+		<em>Please select a Wine Type before choosing color</em>
 	)
 };
 
 class TastingReview extends React.Component {
 	constructor(props) {
 		super(props);
+
+		this.state = {
+			
+		};
 	}
+
+	saveTasting = async (data) => {
+		data.date = moment().format("YYYY-MM-DD HH:mm:ss");
+		data.list_id = 0;
+		data.owner = 0;
+
+		console.log(data);
+		const submit = await fetch(`${window.wines.hostname}/saveTasting`, {
+			method: "post",
+			body: JSON.stringify(data),
+			headers: {
+				"Content-Type": "application/json"
+			}
+		});
+
+		const response = await submit.json();
+	};
 
 	render() {
 		return (
 			<React.Fragment>
 				<h1>Taste a new Wine!</h1>
 				<Formik
-					onSubmit={console.log}
+					onSubmit={this.saveTasting}
 					initialValues={{}}
 				>
 					{({
@@ -48,7 +101,6 @@ class TastingReview extends React.Component {
 						setFieldValue
 					}) => (
 						<Form noValidate onSubmit={handleSubmit}>
-							{console.log(values)}
 							<Card>
 								<Card.Header as="h2">Wine Information</Card.Header>
 								<Card.Body>
@@ -215,15 +267,13 @@ class TastingReview extends React.Component {
 										<Col sm={6}>
 											<Form.Group>
 												<Form.Label>Color</Form.Label>
-												<InputGroup>
-													<Form.Control
-														type="text"
-														name="appearance_color"
-														placeholder="Wine Color"
-														onChange={handleChange}
-														value={values.appearance_color}
-													/>
-												</InputGroup>
+												<Form.Control
+													type="text"
+													name="appearance_color"
+													placeholder="Wine Color"
+													onChange={handleChange}
+													value={values.appearance_color}
+												/>
 											</Form.Group>
 										</Col>
 									</Row>
@@ -238,6 +288,187 @@ class TastingReview extends React.Component {
 													onChange={handleChange}
 													value={values.appearance_notes}
 												/>
+											</Form.Group>
+										</Col>
+									</Row>
+								</Card.Body>
+							</Card>
+								<br />
+							<Card>
+								<Card.Header as="h2">Palate</Card.Header>
+								<Card.Body>
+									<Row>
+										<Col sm={6}>
+											<Form.Group>
+												<Form.Label>Sweetness</Form.Label>
+												<Form.Control
+													as="select"
+													name="palate_sweetness"
+													onChange={handleChange}
+													value={values.palate_sweetness}
+												>
+													<option value=""> - Select a Sweetness - </option>
+													<option value={1}>Dry</option>
+													<option value={2}>Off-Dry</option>
+													<option value={3}>Medium</option>
+													<option value={4}>Sweet</option>
+												</Form.Control>
+											</Form.Group>
+										</Col>
+										<Col sm={6}>
+											<Form.Group>
+												<Form.Label>Acidity</Form.Label>
+												<Form.Control
+													as="select"
+													name="palate_acidity"
+													onChange={handleChange}
+													value={values.palate_acidity}
+												>
+													<option value=""> - Select an Acidity - </option>
+													<option value={1}>Low</option>
+													<option value={5}>Medium</option>
+													<option value={9}>High</option>
+												</Form.Control>
+											</Form.Group>
+										</Col>
+									</Row>
+									<Row>
+										<Col sm={6}>
+											<Form.Group>
+												<Form.Label>Tannin</Form.Label>
+												<Form.Control
+													as="select"
+													name="palate_tannin"
+													onChange={handleChange}
+													value={values.palate_tannin}
+												>
+													<option value=""> - Select a Tannin - </option>
+													<option value={1}>Low</option>
+													<option value={5}>Medium</option>
+													<option value={9}>High</option>
+												</Form.Control>
+											</Form.Group>
+										</Col>
+										<Col sm={6}>
+											<Form.Group>
+												<Form.Label>Alcohol</Form.Label>
+												<Form.Control
+													as="select"
+													name="palate_alcohol"
+													onChange={handleChange}
+													value={values.palate_alcohol}
+												>
+													<option value=""> - Select an Alcohol - </option>
+													<option value={1}>Low</option>
+													<option value={5}>Medium</option>
+													<option value={9}>High</option>
+												</Form.Control>
+											</Form.Group>
+										</Col>
+									</Row>
+									<Row>
+										<Col sm={6}>
+											<Form.Group>
+												<Form.Label>Body</Form.Label>
+												<Form.Control
+													as="select"
+													name="palate_body"
+													onChange={handleChange}
+													value={values.palate_body}
+												>
+													<option value=""> - Select a Body - </option>
+													<option value={1}>Light</option>
+													<option value={5}>Medium</option>
+													<option value={9}>Full</option>
+												</Form.Control>
+											</Form.Group>
+										</Col>
+										<Col sm={6}>
+											<Form.Group>
+												<Form.Label>Flavor Intensity</Form.Label>
+												<Form.Control
+													as="select"
+													name="palate_intensity"
+													onChange={handleChange}
+													value={values.palate_intensity}
+												>
+													<option value=""> - Select an Intensity - </option>
+													<option value={1}>Light</option>
+													<option value={5}>Medium</option>
+													<option value={9}>Pronounced</option>
+												</Form.Control>
+											</Form.Group>
+										</Col>
+									</Row>
+									<Row>
+										<Col sm={6}>
+											<Form.Group>
+												<Form.Label>Finish</Form.Label>
+												<Form.Control
+													as="select"
+													name="palate_finish"
+													onChange={handleChange}
+													value={values.palate_finish}
+												>
+													<option value=""> - Select a Finish - </option>
+													<option value={1}>Short</option>
+													<option value={5}>Medium</option>
+													<option value={9}>Long</option>
+												</Form.Control>
+											</Form.Group>
+										</Col>
+									</Row>
+									<Row>
+										<Col sm={12}>
+											<Form.Group>
+												<Form.Label>Palate Notes</Form.Label>
+												<Form.Control
+													as="textarea"
+													rows="3"
+													name="palate_notes"
+													onChange={handleChange}
+													value={values.palate_notes}
+												/>
+											</Form.Group>
+										</Col>
+									</Row>
+								</Card.Body>
+							</Card>
+								<br />
+							<Card>
+								<Card.Header as="h2">Conclusion</Card.Header>
+								<Card.Body>
+									<Row>
+										<Col sm={12}>
+											<Form.Group>
+												<Form.Label>Conclusion Notes</Form.Label>
+												<Form.Control
+													as="textarea"
+													rows="3"
+													name="conclusion"
+													onChange={handleChange}
+													value={values.conclusion}
+												/>
+											</Form.Group>
+										</Col>
+									</Row>
+									<Row>
+										<Col sm={6}>
+											<Form.Group>
+												<Form.Label>Quality</Form.Label>
+												<Form.Control
+													as="select"
+													name="quality"
+													onChange={handleChange}
+													value={values.quality}
+												>
+													<option value=""> - Select a Quality - </option>
+													<option value={1}>Poor</option>
+													<option value={2}>Acceptable</option>
+													<option value={3}>Good</option>
+													<option value={4}>Very Good</option>
+													<option value={5}>Outstanding</option>
+												</Form.Control>
 											</Form.Group>
 										</Col>
 									</Row>
