@@ -5,5 +5,5 @@ import TastingReview from "./TastingReview";
 export {
 	Lists,
 	List,
-	TastingReview
+	TastingReview,
 }
